@@ -12,7 +12,8 @@ import {
   List,
   ListItem,
   Picker,
-  Content
+  Content,
+  Icon
 } from "native-base";
 
 // Style
@@ -41,7 +42,8 @@ class CoffeeDetail extends Component {
 
   render() {
     if (!cafes) return <Content />;
-    const cafe = cafes[0];
+    const passedItemID = this.props.navigation.getParam("itemID", 1);
+    const cafe = cafes.find(caf => caf.id == passedItemID);
     return (
       <Content>
         <List>
@@ -49,7 +51,9 @@ class CoffeeDetail extends Component {
             <Left>
               <Text style={styles.text}>
                 {cafe.name + "\n"}
-                <Text note>{cafe.location}</Text>
+                <Text note>
+                  {cafe.location}
+                </Text>
               </Text>
             </Left>
             <Body />
@@ -93,5 +97,19 @@ class CoffeeDetail extends Component {
     );
   }
 }
+CoffeeDetail.navigationOptions = ({ navigation }) => {
+  const itemID = navigation.getParam("itemID");
+  return {
+    title: cafes.find(item => item.id === itemID).name,
+    headerRight: (
+      <Icon
+        onPress={() => navigation.push("CoffeeCart")}
+        type="AntDesign"
+        name="shoppingcart"
+        style={{ marginRight: 20 }}
+      />
+    )
+  };
+};
 
 export default observer(CoffeeDetail);
